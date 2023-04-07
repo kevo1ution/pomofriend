@@ -62,7 +62,11 @@ const onStart = async (roomId) => {
 }
 
 function App() {
-  const [roomId, setRoomId] = useState("roomId101123");
+  // TODO: setup creating rooms
+  // TODO: make display look better
+  // TODO: notifications
+  // TODO: change website title based on state (can use helmet)
+  const [roomId] = useState("roomId101123");
   const [startedAt, setStartedAt] = useState();
   const [type, setType] = useState('focus');
   const [focusCount, setFocusCount] = useState(0);
