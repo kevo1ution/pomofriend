@@ -1,6 +1,7 @@
-import React, {useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 import { initializeApp } from "firebase/app";
-import { getDatabase, ref, onValue, child, get, set, off} from "firebase/database";
+import { getDatabase, ref, onValue, child, get, set, off } from "firebase/database";
+import { Helmet } from "react-helmet";
 
 const firebaseApp = initializeApp({
   apiKey: "AIzaSyBGaSbdoHu5IW78nDf58nA_NtjLCMjbfH4",
@@ -22,7 +23,7 @@ const ROOM_TYPES = Object.freeze({
 
 const getNextType = (currentType, focusCount) => {
   if (currentType === ROOM_TYPES.focus) {
-    if(focusCount === 3) { // final consecutive focus session, so long break
+    if (focusCount === 3) { // final consecutive focus session, so long break
       return ROOM_TYPES.longBreak
     }
     return ROOM_TYPES.shortBreak
@@ -31,11 +32,11 @@ const getNextType = (currentType, focusCount) => {
 }
 
 const getDurationMinutes = (type) => {
-  switch(type) {
+  switch (type) {
     case ROOM_TYPES.shortBreak:
       return 5
     case ROOM_TYPES.longBreak:
-      return 15 
+      return 15
     default:
       return 25
   }
@@ -101,23 +102,43 @@ function App() {
 
   const [minutesLeftDisplay, setMinutesLeftDisplay] = useState()
   const [secondsLeftDisplay, setSecondsLeftDisplay] = useState()
+  const timerStarted = minutesLeftDisplay != null && secondsLeftDisplay != null
+  const timesUp = minutesLeftDisplay === 0 && secondsLeftDisplay === 0
+  const timeStr = minutesLeftDisplay + ":" + secondsLeftDisplay
+  const titleDesc = type === ROOM_TYPES.focus ? " time to focus!" : " time for a break!"
+
+  // TODO: use hack timer so this still runs when the chrome tab is inactive
   useEffect(() => {
     const intervalId = setInterval(() => {
       const durationSecs = getDurationMinutes(type) * 60 * 1000
       const secondsLeft = (durationSecs - (Date.now() - new Date(startedAt))) / 1000
-      setMinutesLeftDisplay(Math.floor(secondsLeft / 60))
-      const secondsLeftDisplay = Math.floor(secondsLeft % 60)
+      setMinutesLeftDisplay(Math.max(Math.floor(secondsLeft / 60), 0))
+      const secondsLeftDisplay = Math.max(Math.floor(secondsLeft % 60), 0)
       setSecondsLeftDisplay(secondsLeftDisplay < 10 ? "0" + secondsLeftDisplay : secondsLeftDisplay)
 
     }, 500)
 
     return () => clearInterval(intervalId)
   })
+  useEffect(() => {
+    if(timesUp) {
+      // TODO: send a notification
+    }
+  }, [timesUp])
+
   return (
     <div>
+      <Helmet>
+        <meta
+          name="description"
+          content="Pomodoro technique with a friend or a group of others for studying or working"
+        />
+        <title>{timerStarted ? `${timeStr} - ${titleDesc}` : "Pomofriend"}</title>
+        <link rel="canonical" href="http://mysite.com/example" />
+      </Helmet>
       <h1>{"current room: " + roomId}</h1>
       <button onClick={() => onStart(roomId)}>Start</button>
-      <h1>{"time left (seconds): " + minutesLeftDisplay + ":" + secondsLeftDisplay}</h1>
+      <h1>{"time left (seconds): " + timeStr}</h1>
       <body>{"type count: " + type}</body>
       <body>{"focus count: " + focusCount}</body>
     </div>
