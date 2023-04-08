@@ -21,11 +21,11 @@ const ROOM_TYPES = Object.freeze({
   longBreak: 'longBreak'
 });
 
-const ROOM_TYPES_TO_ACTION_MSG = Object.freeze({
-  [ROOM_TYPES.focus]: "start focus time",
-  [ROOM_TYPES.shortBreak]: "start short break",
-  [ROOM_TYPES.longBreak]: "start long break",
-})
+// const ROOM_TYPES_TO_ACTION_MSG = Object.freeze({
+//   [ROOM_TYPES.focus]: "start focus time",
+//   [ROOM_TYPES.shortBreak]: "start short break",
+//   [ROOM_TYPES.longBreak]: "start long break",
+// })
 
 const getNextType = (currentType, focusCount) => {
   if (currentType === ROOM_TYPES.focus) {
@@ -50,7 +50,7 @@ const getDurationMinutes = (type) => {
 
 const onStart = async (roomId) => {
   // request notification permissions if user has not responded to it yet
-  if(Notification.permission === "default") {
+  if (Notification.permission === "default") {
     Notification.requestPermission()
   }
 
@@ -113,16 +113,51 @@ function App() {
   const [minutesLeftDisplay, setMinutesLeftDisplay] = useState()
   const [secondsLeftDisplay, setSecondsLeftDisplay] = useState()
   const timerStarted = minutesLeftDisplay != null && secondsLeftDisplay != null
-  const timesUp = minutesLeftDisplay === 0 && secondsLeftDisplay === 0
   const timeStr = minutesLeftDisplay + ":" + (secondsLeftDisplay < 10 ? "0" + secondsLeftDisplay : secondsLeftDisplay)
   const titleDesc = type === ROOM_TYPES.focus ? " time to focus!" : " time for a break!"
 
   useEffect(() => {
-    function updateTimeDisplay() {
+    if (startedAt == null || type == null) {
+      return;
+    }
+    // return if times already up to prevent extra notifications
+    if (getSecondsLeft() <= 0) {
+      return;
+    }
+
+    function getSecondsLeft() {
       const durationMs = getDurationMinutes(type) * 60 * 1000
-      const secondsLeft = (durationMs - (Date.now() - new Date(startedAt))) / 1000
-      setMinutesLeftDisplay(Math.max(Math.floor(secondsLeft / 60), 0))
-      setSecondsLeftDisplay(Math.max(Math.floor(secondsLeft % 60), 0))
+      return Math.max((durationMs - (Date.now() - new Date(startedAt))) / 1000, 0)
+    }
+
+    function sendNotification() {
+      const body = type === ROOM_TYPES.focus ? "work time is up!" : "break time is up!";
+
+      const notification = new Notification("Pomofriend", {
+        // TODO: add notif icon
+        body,
+        // TODO: actions is only supported with service workers
+        // add action to start next timer directly
+        // actions: [{
+        //   action: "start",
+        //   title: ROOM_TYPES_TO_ACTION_MSG[getNextType(type, focusCount)]
+        //   // TODO: add action icon
+        // }]
+      });
+      notification.addEventListener("click", (ev) => {
+        // focus the tab whenever the notification gets clicked
+        window.focus()
+        notification.close()
+      })
+    }
+
+    function updateTimeDisplay() {
+      const secondsLeft = getSecondsLeft()
+      setMinutesLeftDisplay(Math.floor(secondsLeft / 60))
+      setSecondsLeftDisplay(Math.floor(secondsLeft % 60))
+      if (getSecondsLeft() <= 0) {
+        sendNotification()
+      }
     }
 
     // use requestAnimationFrame instead of setInterval because we still want this to run while the
@@ -133,7 +168,7 @@ function App() {
     let lastUpdateMs = Date.now()
     function onNextAnimationFrame() {
       // don't continue the clock updates because component was unmounted and disabled interval
-      if(!intervalActive) {
+      if (!intervalActive) {
         return;
       }
 
@@ -153,36 +188,10 @@ function App() {
     return () => {
       intervalActive = false
     }
-  })
-
-  useEffect(() => {
-    // TODO: fix bug where sends notification on initial page load
-    if(timesUp) {
-      const body =  type === ROOM_TYPES.focus ? "work time is up!" : "break time is up!";
-      const nextType = getNextType(type, focusCount)
-      const startNextTimerMsg = ROOM_TYPES_TO_ACTION_MSG[nextType]
-      
-      const notification = new Notification("Pomofriend", { 
-        // TODO: add notif icon
-        body,
-        // TODO: actions is only supported with service workers
-        // add action to start next timer directly
-        // actions: [{
-        //   action: "start",
-        //   title: startNextTimerMsg
-        //   // TODO: add action icon
-        // }]
-      });
-      notification.addEventListener("click", (ev) => {
-        // focus the tab whenever the notification gets clicked
-        window.focus()
-        notification.close()
-      })
-    }
-  }, [timesUp])
+  }, [type, startedAt])
 
   return (
-    <div style={{justifyContent: "center"}}>
+    <div style={{ justifyContent: "center" }}>
       <Helmet
         // set defer to false because we are updating the title while tab is not focused
         // see: https://github.com/nfl/react-helmet#reference-guide
