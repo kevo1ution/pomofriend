@@ -63,6 +63,7 @@ const onStart = async (roomId) => {
 }
 
 function App() {
+  // TODO: handle loading (when still waiting from firebase database initially)
   // TODO: setup creating rooms
   // TODO: make display look better
   // TODO: notifications
@@ -107,18 +108,43 @@ function App() {
   const timeStr = minutesLeftDisplay + ":" + secondsLeftDisplay
   const titleDesc = type === ROOM_TYPES.focus ? " time to focus!" : " time for a break!"
 
-  // TODO: use hack timer so this still runs when the chrome tab is inactive
   useEffect(() => {
-    const intervalId = setInterval(() => {
+    function updateTimeDisplay() {
       const durationSecs = getDurationMinutes(type) * 60 * 1000
       const secondsLeft = (durationSecs - (Date.now() - new Date(startedAt))) / 1000
       setMinutesLeftDisplay(Math.max(Math.floor(secondsLeft / 60), 0))
       const secondsLeftDisplay = Math.max(Math.floor(secondsLeft % 60), 0)
       setSecondsLeftDisplay(secondsLeftDisplay < 10 ? "0" + secondsLeftDisplay : secondsLeftDisplay)
+    }
 
-    }, 500)
+    // use requestAnimationFrame instead of setInterval because we still want this to run while the
+    // chrome tab is inactive in order to send notifications and update the title of the tab
+    // see: https://stackoverflow.com/questions/5927284/how-can-i-make-setinterval-also-work-when-a-tab-is-inactive-in-chrome
+    const UPDATE_INTERVAL_MS = 500;
+    let intervalActive = true;
+    let lastUpdateMs = Date.now()
+    function onNextAnimationFrame() {
+      // don't continue the clock updates because component was unmounted and disabled interval
+      if(!intervalActive) {
+        return;
+      }
 
-    return () => clearInterval(intervalId)
+      let elapsedTimeMs = Date.now() - lastUpdateMs
+      if (elapsedTimeMs > UPDATE_INTERVAL_MS) {
+        lastUpdateMs = Date.now()
+        updateTimeDisplay()
+        setTimeout(onNextAnimationFrame, UPDATE_INTERVAL_MS)
+      } else {
+        requestAnimationFrame(onNextAnimationFrame)
+      }
+    }
+
+    // start make shift setInterval
+    onNextAnimationFrame()
+
+    return () => {
+      intervalActive = false
+    }
   })
   useEffect(() => {
     if(timesUp) {
@@ -128,7 +154,11 @@ function App() {
 
   return (
     <div>
-      <Helmet>
+      <Helmet
+        // set defer to false because we are updating the title while tab is not focused
+        // see: https://github.com/nfl/react-helmet#reference-guide
+        defer={false}
+      >
         <meta
           name="description"
           content="Pomodoro technique with a friend or a group of others for studying or working"
