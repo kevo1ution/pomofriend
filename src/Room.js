@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { ref, onValue, child, get, set, off } from "firebase/database";
 import { Helmet } from "react-helmet";
 import { database } from './firebase'
+import { useParams } from 'react-router-dom';
 import blob from './blob.svg';
 import { Typography } from 'antd';
 import Timer from './Timer';
@@ -67,7 +68,7 @@ const onStart = async (roomId) => {
 }
 
 function Room() {
-  const [roomId] = useState("roomId101123");
+  let { roomId } = useParams();
   const [startedAt, setStartedAt] = useState();
   const [type, setType] = useState('focus');
   const [focusCount, setFocusCount] = useState(0);
@@ -184,7 +185,14 @@ function Room() {
   }, [type, startedAt])
 
   return (
-    <div style={{ justifyContent: "center" }}>
+    <div style={{
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: '#e7e6fb',
+      height: '100vh'
+    }}
+    >
       <Helmet
         // set defer to false because we are updating the title while tab is not focused
         // see: https://github.com/nfl/react-helmet#reference-guide
