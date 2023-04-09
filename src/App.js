@@ -1,14 +1,31 @@
-import React, { useState } from 'react'
-import Room from './Room'
+import React from 'react'
+import { useNavigate } from "react-router-dom";
+
+const ROOM_ID_LENGTH = 4
+
+function randomStr(numCharacters) {
+  const characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
+  const charactersLength = characters.length;
+  let str = ''
+  for (let i  = 0; i < numCharacters; i += 1) {
+    str += characters.charAt(Math.floor(Math.random() * charactersLength))
+  }
+  return str
+}
 
 function App() {
   // TODO: handle loading (when still waiting from firebase database initially)
-  // TODO: setup creating rooms
   // TODO: make display look better
-  const [roomId] = useState("roomId101123");
+  // TODO: make easy way to copy room link to clipboard after creating it
+  const navigate = useNavigate();
+  async function createRoom() {
+    navigate(`/${randomStr(ROOM_ID_LENGTH)}`)
+  }
 
   return (
-    <Room roomId={roomId}></Room>
+    <div>
+      <button onClick={createRoom}>create Pomodoro room</button>
+    </div>
   );
 }
 

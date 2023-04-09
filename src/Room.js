@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { ref, onValue, child, get, set, off } from "firebase/database";
 import { Helmet } from "react-helmet";
 import { database } from './firebase'
+import { useParams } from 'react-router-dom';
 
 const ROOM_TYPES = Object.freeze({
   focus: 'focus',
@@ -62,7 +63,7 @@ const onStart = async (roomId) => {
 }
 
 function Room() {
-  const [roomId] = useState("roomId101123");
+  let { roomId } = useParams();
   const [startedAt, setStartedAt] = useState();
   const [type, setType] = useState('focus');
   const [focusCount, setFocusCount] = useState(0);
