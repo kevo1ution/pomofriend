@@ -40,11 +40,11 @@ const getNextType = (currentType, focusCount) => {
 const getDurationMinutes = (type) => {
   switch (type) {
     case ROOM_TYPES.shortBreak:
-      return 5
+      return 0.1
     case ROOM_TYPES.longBreak:
-      return 15
+      return 0.1
     default:
-      return 25
+      return 0.1
   }
 }
 
@@ -151,13 +151,9 @@ function App() {
       })
     }
 
-    function updateTimeDisplay() {
-      const secondsLeft = getSecondsLeft()
+    function updateTimeDisplay(secondsLeft) {
       setMinutesLeftDisplay(Math.floor(secondsLeft / 60))
       setSecondsLeftDisplay(Math.floor(secondsLeft % 60))
-      if (getSecondsLeft() <= 0) {
-        sendNotification()
-      }
     }
 
     // use requestAnimationFrame instead of setInterval because we still want this to run while the
@@ -175,8 +171,15 @@ function App() {
       let elapsedTimeMs = Date.now() - lastUpdateMs
       if (elapsedTimeMs > UPDATE_INTERVAL_MS) {
         lastUpdateMs = Date.now()
-        updateTimeDisplay()
-        setTimeout(onNextAnimationFrame, UPDATE_INTERVAL_MS)
+        const secondsLeft = getSecondsLeft()
+        updateTimeDisplay(secondsLeft)
+        if (secondsLeft <= 0) {
+          sendNotification()
+          intervalActive = false
+          return
+        } else {
+          setTimeout(onNextAnimationFrame, UPDATE_INTERVAL_MS)
+        }
       } else {
         requestAnimationFrame(onNextAnimationFrame)
       }
