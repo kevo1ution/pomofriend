@@ -1,3 +1,4 @@
+import { Button } from 'antd';
 import React from 'react'
 import { useNavigate } from "react-router-dom";
 
@@ -16,21 +17,22 @@ function randomStr(numCharacters) {
 function App() {
   // TODO: handle loading (when still waiting from firebase database initially)
   // TODO: make display look better
-  const []
-  const [roomId] = useState("roomId101123");
+  // TODO: make easy way to copy room link to clipboard after creating it
+  const navigate = useNavigate();
+  async function createRoom() {
+    navigate(`/${randomStr(ROOM_ID_LENGTH)}`)
+  }
 
   return (
     <div style={{
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: '#e7e6fb',
-      height: '100vh'
+      height: '100vh',
     }}>
-      <Room roomId={roomId}></Room>
-    </div>
-    <div>
-      <button onClick={createRoom}>create Pomodoro room</button>
+      <Button onClick={createRoom} size='large'>
+        Create Pomodoro Room
+      </Button>
     </div>
   );
 }

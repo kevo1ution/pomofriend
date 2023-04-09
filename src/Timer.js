@@ -1,35 +1,45 @@
-import React from 'react'
-import blob from './blob.svg';
+import React from 'react';
+import focus_blob from './focus_blob.svg';
+import shortbreak_blob from './shortbreak_blob.svg';
+import longbreak_blob from './longbreak_blob.svg';
 import { Typography, Button } from 'antd';
+import { StepForwardOutlined } from '@ant-design/icons'
 
 const { Title } = Typography;
 
-const SIZE = '90vh'
+const SIZE = '750px'
 
-function Timer({ timeStr }) {
-  console.log("TIME: ", timeStr)
+const BLOB_TYPES = {
+  focus: focus_blob,
+  shortBreak: shortbreak_blob,
+  longBreak: longbreak_blob
+}
+
+function Timer({ timeStr, onButtonClick, type }) {
   return (
     <div style={{
-      height: SIZE,
-      width: SIZE,
+      minHeight: SIZE,
+      minWidth: SIZE,
       positive: 'relative',
       textAlign: 'center'
     }}>
       <div style={{
         position: 'absolute',
-        width: SIZE,
+        width: '100vw',
         top: '30vh',
+        left: '0',
       }}>
         <Title style={{
           color: 'white',
           fontSize: '100px',
-          marginBottom: '5px'
+          marginBottom: '5px',
+          textShadow: '3px 3px 5px #00000060'
         }}>
           {timeStr}
         </Title>
-        <Button size='large'>START</Button>
+        <Button onClick={onButtonClick} icon={<StepForwardOutlined style={{ color: 'white' }} />} type="text" size='large' />
       </div>
-      <img src={blob} />
+      <img src={BLOB_TYPES[type]} alt="decorative blob" />
     </div>
   );
 }

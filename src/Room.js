@@ -3,11 +3,7 @@ import { ref, onValue, child, get, set, off } from "firebase/database";
 import { Helmet } from "react-helmet";
 import { database } from './firebase'
 import { useParams } from 'react-router-dom';
-import blob from './blob.svg';
-import { Typography } from 'antd';
 import Timer from './Timer';
-
-const { Title } = Typography;
 
 const ROOM_TYPES = Object.freeze({
   focus: 'focus',
@@ -67,6 +63,12 @@ const onStart = async (roomId) => {
   }
 }
 
+const BACKGROUND_COLORS = {
+  'focus': '#f9ebe5',
+  'shortBreak': '#e7e6fb',
+  'longBreak': '#e3eef7'
+}
+
 function Room() {
   let { roomId } = useParams();
   const [startedAt, setStartedAt] = useState();
@@ -82,8 +84,6 @@ function Room() {
     const roomRef = ref(database, 'rooms/' + roomId);
 
     const onRoomChange = (snapshot) => {
-      console.log("SNAPSHOT: ", snapshot.val())
-
       if (snapshot.exists()) {
         const room = snapshot.val();
 
@@ -189,8 +189,9 @@ function Room() {
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: '#e7e6fb',
-      height: '100vh'
+      height: '100vh',
+      width: '100vw',
+      backgroundColor: BACKGROUND_COLORS[type],
     }}
     >
       <Helmet
@@ -205,12 +206,11 @@ function Room() {
         <title>{timerStarted ? `${timeStr} - ${titleDesc}` : "Pomofriend"}</title>
         <link rel="canonical" href="http://mysite.com/example" />
       </Helmet>
-      <Timer timeStr={timeStr} />
-      {/* <h1>{"current room: " + roomId}</h1>
-      <button onClick={() => onStart(roomId)}>Start</button>
-      <h1>{"time left (seconds): " + timeStr}</h1>
-      <body>{"type count: " + type}</body>
-      <body>{"focus count: " + focusCount}</body> */}
+      <Timer
+        timeStr={timerStarted ? timeStr : "--:--"}
+        onButtonClick={() => onStart(roomId)}
+        type={type}
+      />
     </div>
   );
 }
