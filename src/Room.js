@@ -74,6 +74,7 @@ function Room() {
   const [startedAt, setStartedAt] = useState();
   const [type, setType] = useState('focus');
   const [focusCount, setFocusCount] = useState(0);
+  console.log("focusCount", focusCount)
 
   useEffect(() => {
     if (roomId == null) {
