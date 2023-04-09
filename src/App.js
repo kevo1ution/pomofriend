@@ -40,11 +40,11 @@ const getNextType = (currentType, focusCount) => {
 const getDurationMinutes = (type) => {
   switch (type) {
     case ROOM_TYPES.shortBreak:
-      return 0.1
+      return 5
     case ROOM_TYPES.longBreak:
-      return 0.1
+      return 15
     default:
-      return 0.1
+      return 25
   }
 }
 
