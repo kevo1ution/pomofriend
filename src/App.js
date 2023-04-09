@@ -8,7 +8,15 @@ function App() {
   const [roomId] = useState("roomId101123");
 
   return (
-    <Room roomId={roomId}></Room>
+    <div style={{
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: '#e7e6fb',
+      height: '100vh'
+    }}>
+      <Room roomId={roomId}></Room>
+    </div>
   );
 }
 

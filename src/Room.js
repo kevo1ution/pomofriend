@@ -2,6 +2,11 @@ import React, { useState, useEffect } from 'react'
 import { ref, onValue, child, get, set, off } from "firebase/database";
 import { Helmet } from "react-helmet";
 import { database } from './firebase'
+import blob from './blob.svg';
+import { Typography } from 'antd';
+import Timer from './Timer';
+
+const { Title } = Typography;
 
 const ROOM_TYPES = Object.freeze({
   focus: 'focus',
@@ -192,11 +197,12 @@ function Room() {
         <title>{timerStarted ? `${timeStr} - ${titleDesc}` : "Pomofriend"}</title>
         <link rel="canonical" href="http://mysite.com/example" />
       </Helmet>
-      <h1>{"current room: " + roomId}</h1>
+      <Timer timeStr={timeStr} />
+      {/* <h1>{"current room: " + roomId}</h1>
       <button onClick={() => onStart(roomId)}>Start</button>
       <h1>{"time left (seconds): " + timeStr}</h1>
       <body>{"type count: " + type}</body>
-      <body>{"focus count: " + focusCount}</body>
+      <body>{"focus count: " + focusCount}</body> */}
     </div>
   );
 }
