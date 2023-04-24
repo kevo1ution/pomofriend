@@ -39,9 +39,11 @@ const getDurationMinutes = (type) => {
   }
 }
 
+// TODO: when user clicks play, it should update on set and not wait until database realtime database sends an update
 const onStart = async (roomId) => {
   // request notification permissions if user has not responded to it yet
   if (Notification.permission === "default") {
+    // TODO: bug fix where notification accept doesn't actually close and get resolved
     Notification.requestPermission()
   }
 
@@ -75,6 +77,7 @@ function Room() {
   const [startedAt, setStartedAt] = useState();
   const [type, setType] = useState('focus');
   const [focusCount, setFocusCount] = useState(0);
+  console.log("focusCount", focusCount)
 
   useEffect(() => {
     if (roomId == null) {
