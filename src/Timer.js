@@ -29,8 +29,7 @@ function Timer({ timeStr, onButtonClick, type }) {
       minHeight: SIZE,
       minWidth: SIZE,
       positive: 'relative',
-      textAlign: 'center',
-      pointerEvents: 'none'
+      textAlign: 'center'
     }}>
       <div style={{
         position: 'absolute',
