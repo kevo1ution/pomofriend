@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import focus_blob from './focus_blob.svg';
 import shortbreak_blob from './shortbreak_blob.svg';
 import longbreak_blob from './longbreak_blob.svg';
@@ -15,13 +15,22 @@ const BLOB_TYPES = {
   longBreak: longbreak_blob
 }
 
+const chime = new Audio('chime.mp3');
+
 function Timer({ timeStr, onButtonClick, type }) {
+  useEffect(() => {
+    if (timeStr === "0:00") {
+      chime.play();
+    }
+  }, [timeStr])
+
   return (
     <div style={{
       minHeight: SIZE,
       minWidth: SIZE,
       positive: 'relative',
-      textAlign: 'center'
+      textAlign: 'center',
+      pointerEvents: 'none'
     }}>
       <div style={{
         position: 'absolute',
