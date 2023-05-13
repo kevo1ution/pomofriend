@@ -4,6 +4,7 @@ import { Helmet } from "react-helmet";
 import { database } from './firebase'
 import { useParams } from 'react-router-dom';
 import Timer from './Timer';
+import Footer from './Footer';
 
 const ROOM_TYPES = Object.freeze({
   focus: 'focus',
@@ -190,6 +191,7 @@ function Room() {
   return (
     <div style={{
       display: 'flex',
+      flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center',
       height: '100vh',
@@ -209,11 +211,20 @@ function Room() {
         <title>{timerStarted ? `${timeStr} - ${titleDesc}` : "Pomofriend"}</title>
         <link rel="canonical" href="http://mysite.com/example" />
       </Helmet>
-      <Timer
-        timeStr={timerStarted ? timeStr : "--:--"}
-        onButtonClick={() => onStart(roomId)}
-        type={type}
-      />
+      <div style={{
+        flexGrow: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}>
+        <Timer
+          timeStr={timerStarted ? timeStr : "--:--"}
+          onButtonClick={() => onStart(roomId)}
+          type={type}
+        />
+      </div>
+      <Footer />
     </div>
   );
 }
