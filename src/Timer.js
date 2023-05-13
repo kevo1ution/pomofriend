@@ -48,6 +48,8 @@ function Timer({ timeStr, onButtonClick, type }) {
         left: '0',
       }}>
         <Title style={{
+          // keeps numbers from shifting as timer changes (e.g. '1' has less width than '8' without this setting)
+          fontVariantNumeric: "tabular-nums",
           color: 'white',
           fontSize: '100px',
           marginBottom: '5px',
