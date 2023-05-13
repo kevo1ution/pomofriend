@@ -18,7 +18,7 @@ const chime = new Audio('chime.mp3');
 
 function Timer({ timeStr, onButtonClick, type }) {
   const screens = useBreakpoint();
-  console.log(screens);
+
   let blobSize;
   if (screens.md) {
     blobSize = 750;
