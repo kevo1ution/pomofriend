@@ -211,20 +211,11 @@ function Room() {
         <title>{timerStarted ? `${timeStr} - ${titleDesc}` : "Pomofriend"}</title>
         <link rel="canonical" href="http://mysite.com/example" />
       </Helmet>
-      <div style={{
-        flexGrow: 1,
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}>
-        <Timer
-          timeStr={timerStarted ? timeStr : "--:--"}
-          onButtonClick={() => onStart(roomId)}
-          type={type}
-        />
-      </div>
-      <Footer />
+      <Timer
+        timeStr={timerStarted ? timeStr : "--:--"}
+        onButtonClick={() => onStart(roomId)}
+        type={type}
+      />
     </div>
   );
 }

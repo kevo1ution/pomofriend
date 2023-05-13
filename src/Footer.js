@@ -19,7 +19,7 @@ const Footer = memo(function Footer() {
       level={5}
       style={{ margin: 0 }}
     >Made with {emoji} Kevin and Sarah</Title>
-    <Link to={"https://discord.gg/bbsennnNWy"}
+    <Link to={"https://github.com/kevo1ution/pomofriend/issues/new"}
       target="_blank" rel="noopener noreferrer" >
       Feature Request/Bug Report
     </Link>
