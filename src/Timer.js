@@ -18,12 +18,14 @@ const chime = new Audio('chime.mp3');
 
 function Timer({ timeStr, onButtonClick, type }) {
   const screens = useBreakpoint();
-
+  console.log(screens);
   let blobSize;
   if (screens.md) {
     blobSize = 750;
   } else if (screens.sm) {
     blobSize = 550;
+  } else {
+    blobSize = 400;
   }
 
   useEffect(() => {
@@ -42,7 +44,7 @@ function Timer({ timeStr, onButtonClick, type }) {
       <div style={{
         position: 'absolute',
         width: '100vw',
-        top: '30vh',
+        top: '25vh',
         left: '0',
       }}>
         <Title style={{
