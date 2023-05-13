@@ -4,7 +4,6 @@ import { Helmet } from "react-helmet";
 import { database } from './firebase'
 import { useParams } from 'react-router-dom';
 import Timer from './Timer';
-import Footer from './Footer';
 
 const ROOM_TYPES = Object.freeze({
   focus: 'focus',
