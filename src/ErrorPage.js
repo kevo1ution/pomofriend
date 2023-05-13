@@ -8,7 +8,7 @@ export default function ErrorPage() {
   // TODO: make this look better
   return (
     <div id="error-page" style={{
-      height: '100vh',
+      height: '100%',
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'space-between'

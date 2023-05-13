@@ -43,7 +43,7 @@ function Timer({ timeStr, onButtonClick, type }) {
     }}>
       <div style={{
         position: 'absolute',
-        width: '100vw',
+        width: '100%',
         top: '25vh',
         left: '0',
       }}>
