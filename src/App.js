@@ -42,7 +42,7 @@ function App() {
           Create Pomodoro Room
         </Button>
       </div>
-      <Footer></Footer>
+      <Footer />
     </div>
   );
 }

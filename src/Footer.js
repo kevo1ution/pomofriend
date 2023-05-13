@@ -1,9 +1,11 @@
 import { Link } from 'react-router-dom'
 import { Typography } from 'antd';
+import { memo } from 'react';
 
 const EMOJIS_MADE_WITH = ["❤️️", "❤️️", "❤️️", "❤️️", "💪", "🚀", "🥶", "🔥", "😈", "💯"];
 const { Title } = Typography;
-function Footer() {
+
+const Footer = memo(function Footer() {
   const emoji = EMOJIS_MADE_WITH[Math.floor(Math.random() * EMOJIS_MADE_WITH.length)];
 
   return (<div style={{
@@ -23,6 +25,6 @@ function Footer() {
       Feature Request/Bug Report
     </Link>
   </div>)
-}
+});
 
-export default Footer
+export default Footer;
