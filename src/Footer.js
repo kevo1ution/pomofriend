@@ -12,7 +12,6 @@ const Footer = memo(function Footer() {
     width: '100%',
     flexDirection: 'column',
     display: 'flex',
-    justifyContent: '',
     alignItems: 'center',
     margin: 20
   }}>

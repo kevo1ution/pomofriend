@@ -2,12 +2,11 @@ import React, { useEffect } from 'react';
 import focus_blob from './focus_blob.svg';
 import shortbreak_blob from './shortbreak_blob.svg';
 import longbreak_blob from './longbreak_blob.svg';
-import { Typography, Button } from 'antd';
+import { Typography, Button, Grid } from 'antd';
 import { StepForwardOutlined } from '@ant-design/icons'
 
+const { useBreakpoint } = Grid;
 const { Title } = Typography;
-
-const SIZE = '750px'
 
 const BLOB_TYPES = {
   focus: focus_blob,
@@ -18,6 +17,15 @@ const BLOB_TYPES = {
 const chime = new Audio('chime.mp3');
 
 function Timer({ timeStr, onButtonClick, type }) {
+  const screens = useBreakpoint();
+
+  let blobSize;
+  if (screens.md) {
+    blobSize = 750;
+  } else if (screens.sm) {
+    blobSize = 550;
+  }
+
   useEffect(() => {
     if (timeStr === "0:00") {
       chime.play();
@@ -26,8 +34,8 @@ function Timer({ timeStr, onButtonClick, type }) {
 
   return (
     <div style={{
-      minHeight: SIZE,
-      minWidth: SIZE,
+      minHeight: blobSize + 'px',
+      minWidth: blobSize + 'px',
       positive: 'relative',
       textAlign: 'center'
     }}>
